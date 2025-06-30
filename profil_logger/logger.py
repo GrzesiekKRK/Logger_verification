@@ -4,6 +4,7 @@ import threading
 import re
 from typing import List, Optional, Dict, Any
 
+
 LOG_LEVEL_VALUES = {"DEBUG": 0, "INFO": 1, "WARNING": 2, "ERROR": 3, "CRITICAL": 4}
 DEFAULT_LOG_LEVEL = "DEBUG"
 
@@ -40,7 +41,8 @@ class ProfileLogger:
         self.handlers = handlers
         self.current_log_level_val = LOG_LEVEL_VALUES[DEFAULT_LOG_LEVEL]
 
-    def log(self, level: str, message: str):
+    #TODO DO prefixów aletrów
+    def _log(self, level: str, message: str):
         if LOG_LEVEL_VALUES[level] < self.current_log_level_val:
             return
         entry = LogEntry(date=datetime.datetime.now(), level=level, message=message)
@@ -49,37 +51,43 @@ class ProfileLogger:
 
     @staticmethod
     def write_to_handler(handler: Any, entry: LogEntry):
-        try:
-            try:
-                handler.persist_log_sql(entry)
-            except AttributeError:
+        persist_methods = [
+                            'persist_log_sql', 'persist_log_json',
+                            'persist_log_csv',  'persist_log_file'
+                            ]
+        last_exception = None
+        for method_name in persist_methods:
+            if hasattr(handler, method_name):
                 try:
-                    handler.persist_log_json(entry)
-                except AttributeError:
-                    handler.persist_log_csv(entry)
-        except Exception as e:
-            try:
-                handler.persist_log_file(entry)
-            except Exception as final_e:
-                print(
-                    f"ERROR: All handlers failed. Final error on {type(handler).__name__}: {final_e}"
-                )
+                    method = getattr(handler, method_name)
+                    method(entry)
+                    return
+                except Exception as e:
+                    last_exception = e
+                    continue
+
+        error_msg = f"ERROR: All handlers failed. Final error on {type(handler).__name__}"
+
+        if last_exception:
+            error_msg += f". Last error {last_exception}"
+
+        print(error_msg)
 
     #TODO do czego to ma być
     def info(self, message: str):
-        self.log("INFO", message)
+        self._log("INFO", message)
 
     def warning(self, message: str):
-        self.log("WARNING", message)
+        self._log("WARNING", message)
 
     def critical(self, message: str):
-        self.log("CRITICAL", message)
+        self._log("CRITICAL", message)
 
     def error(self, message: str):
-        self.log("ERROR", message)
+        self._log("ERROR", message)
 
     def debug(self, message: str):
-        self.log("DEBUG", message)
+        self._log("DEBUG", message)
 
     def set_log_level(self, level: str):
         self.current_log_level_val = LOG_LEVEL_VALUES.get(
@@ -111,7 +119,7 @@ class ProfileLoggerReader:
                         )
                         return []
 
-   #TODO
+   #TODO side effect blokuje logi
     @staticmethod
     def filter_by_date(
         logs: List[LogEntry],
@@ -120,11 +128,7 @@ class ProfileLoggerReader:
     ) -> List[LogEntry]:
         if not start_date and not end_date:
             return logs
-        to_remove = [
-            log
-            for log in logs
-            if (start_date and log.date < start_date)
-            or (end_date and log.date >= end_date)
+        to_remove = [log for log in logs if (start_date and log.date < start_date) or (end_date and log.date >= end_date)
         ]
         for item in to_remove:
             logs.remove(item)

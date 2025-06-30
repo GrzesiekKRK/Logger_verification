@@ -5,7 +5,7 @@ import csv
 import sqlite3
 import os
 import datetime
-from typing import List
+from typing import List, Optional
 from .logger import LogEntry
 
 GLOBAL_TOTAL_LINES_WRITTEN = 0
@@ -27,7 +27,8 @@ class JsonHandler:
                 all_logs_data = json.load(file)
         else:
             all_logs_data = []
-        all_logs_data.append(entry.to_dict())  # dodanie loggów
+
+        all_logs_data.append(entry.to_dict())
         with open(
             self.filepath,
             "w",
@@ -62,7 +63,6 @@ class CSVHandler:
                 writer.writerow(["date", "level", "message"])
 
     def persist_log_csv(self, entry: LogEntry) -> None:
-        print("csv open")
         with open(
             self.filepath,
             "a",
@@ -105,32 +105,31 @@ class FileHandler:
                 file.write("")
 
     def persist_log_file(self, entry: LogEntry) -> None:
-        global GLOBAL_TOTAL_LINES_WRITTEN
         log_line = f"{entry.date.isoformat()} {entry.level} {entry.message}\n"
         with open(
             self.filepath,
             "a",
         ) as file:
             file.write(log_line)
-        GLOBAL_TOTAL_LINES_WRITTEN += 1
 
+    #TODO CONTEXT MANAGER
     def retrieve_all_logs_file(self) -> List[LogEntry]:
         log_entries_list = []
         try:
-            file = open(
+            with open(
                 self.filepath,
                 "r",
-            )
-            for line_content_str in file.readlines():
-                parts = line_content_str.strip().split(" ", 2)
-                if len(parts) == 3:
-                    log_entries_list.append(
-                        LogEntry(
-                            date=datetime.datetime.fromisoformat(parts[0]),
-                            level=parts[1],
-                            message=parts[2],
+            ) as file:
+                for line_content_str in ile.readlines():
+                    parts = line_content_str.strip().split(" ", 2)
+                    if len(parts) == 3:
+                        log_entries_list.append(
+                            LogEntry(
+                                date=datetime.datetime.fromisoformat(parts[0]),
+                                level=parts[1],
+                                message=parts[2],
+                            )
                         )
-                    )
         except (FileNotFoundError, ValueError):
             return []
         return log_entries_list
