@@ -120,7 +120,7 @@ class FileHandler:
                 self.filepath,
                 "r",
             ) as file:
-                for line_content_str in ile.readlines():
+                for line_content_str in file.readlines():
                     parts = line_content_str.strip().split(" ", 2)
                     if len(parts) == 3:
                         log_entries_list.append(
@@ -155,7 +155,7 @@ class SQLiteHandler:
                     message TEXT NOT NULL
                 )
             """
-            cursor.executescript(create_table_sql)
+            cursor.execute(create_table_sql)
             conn.commit()
 
     def persist_log_sql(self, entry: LogEntry):
@@ -181,7 +181,6 @@ class SQLiteHandler:
                             message=row[2],
                         )
                     )
-                    conn.commit()
         except (sqlite3.Error, ValueError):
             return []
         return log_entries_list
