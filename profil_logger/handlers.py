@@ -5,10 +5,10 @@ import csv
 import sqlite3
 import os
 import datetime
-from typing import List, Optional
+from typing import List
 from .logger import LogEntry
 
-GLOBAL_TOTAL_LINES_WRITTEN = 0
+
 
 
 class JsonHandler:

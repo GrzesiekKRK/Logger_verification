@@ -9,7 +9,6 @@ LOG_LEVEL_VALUES = {"DEBUG": 0, "INFO": 1, "WARNING": 2, "ERROR": 3, "CRITICAL":
 DEFAULT_LOG_LEVEL = "DEBUG"
 
 
-#TODO Standart zwrotu logów
 class LogEntry:
     def __init__(self, date: datetime.datetime, level: str, message: str):
         self.date = date
@@ -19,7 +18,6 @@ class LogEntry:
     def __repr__(self):
         return f"LogEntry(date={self.date.isoformat()}, level='{self.level}', message='{self.message}')"
 
-    #TODO  już korzysta json i csv
     def to_dict(self) -> dict:
         return {
             "date": self.date.isoformat(),
@@ -28,7 +26,7 @@ class LogEntry:
         }
 
     @staticmethod
-    def creat_log_entry(data: Dict[str, str]) -> "LogEntry":
+    def create_log_entry(data: Dict[str, str]) -> "LogEntry":
         return LogEntry(
             date=datetime.datetime.fromisoformat(data["date"]),
             level=data["level"],
@@ -41,16 +39,14 @@ class ProfileLogger:
         self.handlers = handlers
         self.current_log_level_val = LOG_LEVEL_VALUES[DEFAULT_LOG_LEVEL]
 
-    #TODO DO prefixów aletrów
-    def _log(self, level: str, message: str):
+    def _log(self, level: str, message: str) -> None:
         if LOG_LEVEL_VALUES[level] < self.current_log_level_val:
             return
         entry = LogEntry(date=datetime.datetime.now(), level=level, message=message)
         for handler_item in self.handlers:
             self.write_to_handler(handler_item, entry)
 
-    @staticmethod
-    def write_to_handler(handler: Any, entry: LogEntry):
+    def write_to_handler(self, handler: Any, entry: LogEntry) -> None:
         persist_methods = [
                             'persist_log_sql', 'persist_log_json',
                             'persist_log_csv',  'persist_log_file'
@@ -70,26 +66,24 @@ class ProfileLogger:
 
         if last_exception:
             error_msg += f". Last error {last_exception}"
-
         print(error_msg)
 
-    #TODO do czego to ma być
-    def info(self, message: str):
+    def info(self, message: str) -> None:
         self._log("INFO", message)
 
-    def warning(self, message: str):
+    def warning(self, message: str) -> None:
         self._log("WARNING", message)
 
-    def critical(self, message: str):
+    def critical(self, message: str) -> None:
         self._log("CRITICAL", message)
 
-    def error(self, message: str):
+    def error(self, message: str) -> None:
         self._log("ERROR", message)
 
-    def debug(self, message: str):
+    def debug(self, message: str) -> None:
         self._log("DEBUG", message)
 
-    def set_log_level(self, level: str):
+    def set_log_level(self, level: str) -> None:
         self.current_log_level_val = LOG_LEVEL_VALUES.get(
             level.upper(), self.current_log_level_val
         )
@@ -101,25 +95,23 @@ class ProfileLoggerReader:
 
     #TODO dystrubucja na włąściwy log/ czy logi mają być zapisywane w wszyskich formatach zawsze i odczytywane w wszystkich formatach
     def get_all_logs_from_handler(self) -> List[LogEntry]:
+        retrieval_methods = [
+            'retrieve_all_logs_sql', 'retrieve_all_logs_json',
+            'retrieve_all_logs_csv', 'retrieve_all_logs_file'
+        ]
 
-        try:
-            return self.handler.retrieve_all_logs_sql()
-        except AttributeError:
-            try:
-                return self.handler.retrieve_all_logs_json()
-            except AttributeError:
+        for method_name in retrieval_methods:
+            if hasattr(self.handler, method_name):
                 try:
-                    return self.handler.retrieve_all_logs_csv()
-                except AttributeError:
-                    try:
-                        return self.handler.retrieve_all_logs_file()
-                    except AttributeError:
-                        print(
-                            f"ERROR: Handler {type(self.handler).__name__} has no recognized retrieval method."
-                        )
-                        return []
+                    method = getattr(self.handler, method_name)
+                    return method()
+                except Exception as e:
+                    print(f"{method_name}: {e}")
+                    continue
+        print(f"ERROR: Handler {type(self.handler).__name__} has no recognized retrieval method.")
+        return []
 
-   #TODO side effect blokuje logi
+
     @staticmethod
     def filter_by_date(
         logs: List[LogEntry],
