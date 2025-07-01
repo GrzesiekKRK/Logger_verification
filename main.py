@@ -11,13 +11,13 @@ def log_json(handler):
     reader = ProfileLoggerReader(handler)
     logs = reader.get_all_logs_from_handler()
     ic(f"Found {len(logs)} json logs:")
-    # find_by_text = reader.find_by_text('First message',
+    # find_by_text = reader.find_by_regex('First',
     #                                              start_date=datetime.datetime(2025, 7, 1, hour=16, minute=30),
     #                                              end_date=datetime.datetime(2025, 7, 1, hour=16, minute=41)
     #                                              )
     # ic("filtrowanie json", find_by_text)
-    find_by_text = reader.find_by_text(
-        "First message", start_date=datetime.datetime(2025, 7, 1, hour=16, minute=30)
+    find_by_text = reader.find_by_regex(
+        "mess", end_date=datetime.datetime(2025, 7, 1, hour=16, minute=41)
     )
     ic("filtrowanie json", find_by_text)
 

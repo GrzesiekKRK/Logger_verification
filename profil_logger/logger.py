@@ -142,6 +142,7 @@ class ProfileLoggerReader:
 
         return filtered_logs
 
+    # TODO stara wersja
     # @staticmethod
     # def filter_by_date(
     #         logs: List[LogEntry],
@@ -166,17 +167,34 @@ class ProfileLoggerReader:
             result_logs = [log for log in all_logs if text in log.message]
         return result_logs
 
+    # TODO regex nie znajduje First pisane first/ dałem lower na oba str
     def find_by_regex(
         self, regex: str, start_date=None, end_date=None
     ) -> List[LogEntry]:
+        pattern = re.compile(regex.lower())
         all_logs = self.get_all_logs_from_handler()
-        try:
-            pattern = re.compile(regex)
-            matching_logs = [log for log in all_logs if pattern.search(log.message)]
-            return self.filter_by_date(matching_logs, start_date, end_date)
-        except re.error as e:
-            print(f"No logs with '{regex}' ")
-            return []
+        if not start_date and not end_date:
+            try:
+                matching_logs = [
+                    log for log in all_logs if pattern.search(log.message.lower())
+                ]
+                return matching_logs
+            except re.error as e:
+                print(f"No logs with '{regex}' pattern ")
+                return []
+        elif start_date or end_date:
+            filtered_by_date = self.filter_by_date(all_logs, start_date, end_date)
+            try:
+                matching_logs = [
+                    log
+                    for log in filtered_by_date
+                    if pattern.search(log.message.lower())
+                ]
+                return matching_logs
+            except re.error as e:
+                print(f"No logs with '{regex}' pattern ")
+                return []
+        return []
 
     def group_by_level(
         self, start_date=None, end_date=None
