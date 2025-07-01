@@ -184,13 +184,8 @@ class ProfileLoggerReader:
         self, start_date=None, end_date=None
     ) -> Dict[str, List[LogEntry]]:
         all_logs = self.get_all_logs_from_handler()
-        grouped_logs_map = {
-            "DEBUG": [],
-            "INFO": [],
-            "WARNING": [],
-            "ERROR": [],
-            "CRITICAL": [],
-        }
+        levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+        grouped_logs_map = {level: [] for level in levels}
         filter_by_date = self.filter_by_date(all_logs, start_date, end_date)
         for log_entry in filter_by_date:
             grouped_logs_map[log_entry.level].append(log_entry)
@@ -226,21 +221,8 @@ class ProfileLoggerReader:
     ) -> Dict[str, List[LogEntry]]:
         all_logs = self.get_all_logs_from_handler()
         logs_to_group = self.filter_by_date(all_logs, start_date, end_date)
-        grouped_by_month = {
-            "1": [],
-            "2": [],
-            "3": [],
-            "4": [],
-            "5": [],
-            "6": [],
-            "7": [],
-            "8": [],
-            "9": [],
-            "10": [],
-            "11": [],
-            "12": [],
-        }
+        grouped_by_month = {f"{i:02}": [] for i in range(1, 13)}
         for log_entry in logs_to_group:
-            month_key = log_entry.date.strftime("%Y-%m")
+            month_key = log_entry.date.strftime("%m")
             grouped_by_month[month_key].append(log_entry)
         return grouped_by_month
