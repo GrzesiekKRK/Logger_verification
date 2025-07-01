@@ -121,11 +121,10 @@ class ProfileLoggerReader:
             return logs
         filtered_logs = []
         for log in logs:
-            if start_date > log.date >= end_date:
+            if start_date < log.date <= end_date:
                 filtered_logs.append(log)
         return filtered_logs
 
-    #TODO  plus szukanie tekstu
     def find_by_text(self, text: str, start_date=None, end_date=None) -> List[LogEntry]:
         all_logs = self.get_all_logs_from_handler()
         result_logs = [log for log in all_logs if text in log.message]

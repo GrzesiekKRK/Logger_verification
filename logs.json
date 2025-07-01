@@ -28,5 +28,20 @@
         "date": "2025-07-01T16:40:59.924460",
         "level": "ERROR",
         "message": "Third message"
+    },
+    {
+        "date": "2025-07-01T16:48:51.016812",
+        "level": "INFO",
+        "message": "First message"
+    },
+    {
+        "date": "2025-07-01T16:48:51.257275",
+        "level": "WARNING",
+        "message": "Second message"
+    },
+    {
+        "date": "2025-07-01T16:48:51.356064",
+        "level": "ERROR",
+        "message": "Third message"
     }
 ]

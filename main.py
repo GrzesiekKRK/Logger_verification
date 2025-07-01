@@ -11,6 +11,11 @@ def log_json(handler):
     reader = ProfileLoggerReader(handler)
     logs = reader.get_all_logs_from_handler()
     ic(f"Found {len(logs)} json logs:")
+    # filtered_by_hour = reader.filter_by_date(logs,
+    #                                              start_date=datetime.datetime(2025, 7, 1, hour=16, minute=30),
+    #                                              end_date=datetime.datetime(2025, 7, 1, hour=16, minute=41)
+    #                                              )
+    # ic("filtrowanie json", filtered_by_hour)
 
 
 def log_csv(handler):
@@ -28,11 +33,6 @@ def log_sql(handler):
 def log_file_handler(handler):
     reader = ProfileLoggerReader(handler)
     logs_file_handler = reader.get_all_logs_from_handler()
-    # filtered_by_hour = reader.filter_by_date(logs_file_handler,
-    #                                          start_date=datetime.datetime(2025, 6, 25, hour=18, minute=30),
-    #                                          end_date=datetime.datetime(2025, 6, 25, hour=18, minute=58)
-    #                                          )
-
     ic(f"Found {len(logs_file_handler)} log entries:")
 
 
@@ -49,7 +49,6 @@ def start():
     log_csv(handler_csv)
     log_sql(handler_sql)
     log_file_handler(handler_file)
-
 
 
 if __name__ == "__main__":
