@@ -159,12 +159,8 @@ class ProfileLoggerReader:
 
     def find_by_text(self, text: str, start_date=None, end_date=None) -> List[LogEntry]:
         all_logs = self.get_all_logs_from_handler()
-        result_logs = []
-        if start_date or end_date:
-            filter_by_time = self.filter_by_date(all_logs, start_date, end_date)
-            result_logs = [log for log in filter_by_time if text in log.message]
-        else:
-            result_logs = [log for log in all_logs if text in log.message]
+        filter_by_time = self.filter_by_date(all_logs, start_date, end_date)
+        result_logs = [log for log in filter_by_time if text in log.message]
         return result_logs
 
     # TODO regex nie znajduje First pisane first/ dałem lower na oba str
@@ -173,29 +169,17 @@ class ProfileLoggerReader:
     ) -> List[LogEntry]:
         pattern = re.compile(regex.lower())
         all_logs = self.get_all_logs_from_handler()
-        if not start_date and not end_date:
-            try:
-                matching_logs = [
-                    log for log in all_logs if pattern.search(log.message.lower())
-                ]
-                return matching_logs
-            except re.error as e:
-                print(f"No logs with '{regex}' pattern ")
-                return []
-        elif start_date or end_date:
-            filtered_by_date = self.filter_by_date(all_logs, start_date, end_date)
-            try:
-                matching_logs = [
-                    log
-                    for log in filtered_by_date
-                    if pattern.search(log.message.lower())
-                ]
-                return matching_logs
-            except re.error as e:
-                print(f"No logs with '{regex}' pattern ")
-                return []
-        return []
+        filtered_by_date = self.filter_by_date(all_logs, start_date, end_date)
+        try:
+            matching_logs = [
+                log for log in filtered_by_date if pattern.search(log.message.lower())
+            ]
+            return matching_logs
+        except re.error as e:
+            print(f"No logs with '{regex}' pattern ")
+            return []
 
+    # TODO to samo co u filter czy to za duża zmiana?
     def group_by_level(
         self, start_date=None, end_date=None
     ) -> Dict[str, List[LogEntry]]:
@@ -207,17 +191,9 @@ class ProfileLoggerReader:
             "ERROR": [],
             "CRITICAL": [],
         }
-        if start_date or end_date:
-            filter_by_date = self.filter_by_date(all_logs, start_date, end_date)
-            for log_entry in filter_by_date:
-                grouped_logs_map[log_entry.level].append(log_entry)
-            return grouped_logs_map
-
-        elif not start_date and not end_date:
-            for log_entry in all_logs:
-                grouped_logs_map[log_entry.level].append(log_entry)
-            return grouped_logs_map
-
+        filter_by_date = self.filter_by_date(all_logs, start_date, end_date)
+        for log_entry in filter_by_date:
+            grouped_logs_map[log_entry.level].append(log_entry)
         return grouped_logs_map
 
     # def group_by_level(
@@ -250,21 +226,21 @@ class ProfileLoggerReader:
     ) -> Dict[str, List[LogEntry]]:
         all_logs = self.get_all_logs_from_handler()
         logs_to_group = self.filter_by_date(all_logs, start_date, end_date)
-
-        unique_month_year_keys = []
+        grouped_by_month = {
+            "1": [],
+            "2": [],
+            "3": [],
+            "4": [],
+            "5": [],
+            "6": [],
+            "7": [],
+            "8": [],
+            "9": [],
+            "10": [],
+            "11": [],
+            "12": [],
+        }
         for log_entry in logs_to_group:
-            month_year_str = log_entry.date.strftime("%Y-%m")
-            if month_year_str not in unique_month_year_keys:
-                unique_month_year_keys.append(month_year_str)
-
-        grouped_by_month_data = {}
-        for month_key_str in unique_month_year_keys:
-            logs_for_this_month = []
-            for log_entry in logs_to_group:
-                if log_entry.date.strftime("%Y-%m") == month_key_str:
-                    logs_for_this_month.append(log_entry)
-
-            if logs_for_this_month:
-                grouped_by_month_data[month_key_str] = logs_for_this_month
-
-        return grouped_by_month_data
+            month_key = log_entry.date.strftime("%Y-%m")
+            grouped_by_month[month_key].append(log_entry)
+        return grouped_by_month
