@@ -159,7 +159,7 @@ class SQLiteHandler:
         with self.get_conn() as conn:
             cursor = conn.cursor()
             sql_query = f"INSERT INTO {self.table_name} (timestamp, level, message) VALUES ('{entry.date.isoformat()}', '{entry.level}', '{entry.message}')"
-            cursor.executescript(sql_query)
+            cursor.execute(sql_query)
             conn.commit()
 
     def retrieve_all_logs_sql(self) -> List[LogEntry]:
