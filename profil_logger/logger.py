@@ -1,6 +1,5 @@
-from icecream import ic
 import datetime
-import threading
+
 import re
 from typing import List, Optional, Dict, Any
 from collections import defaultdict
@@ -97,7 +96,6 @@ class ProfileLoggerReader:
     def __init__(self, handler: Any):
         self.handler = handler
 
-    # TODO dystrubucja na włąściwy log/ czy logi mają być zapisywane w wszyskich formatach zawsze i odczytywane w wszystkich formatach
     def get_all_logs_from_handler(self) -> List[LogEntry]:
         retrieval_methods = [
             "retrieve_all_logs_sql",
@@ -121,9 +119,9 @@ class ProfileLoggerReader:
 
     @staticmethod
     def filter_by_date(
-            logs: List[LogEntry],
-            start_date: Optional[datetime.datetime] = None,
-            end_date: Optional[datetime.datetime] = None,
+        logs: List[LogEntry],
+        start_date: Optional[datetime.datetime] = None,
+        end_date: Optional[datetime.datetime] = None,
     ) -> List[LogEntry]:
         if not start_date and not end_date:
             return logs
@@ -154,7 +152,6 @@ class ProfileLoggerReader:
             print(f"No logs with '{regex}' pattern ")
             return []
 
-    # TODO to samo co u filter czy to za duża zmiana?
     def group_by_level(
         self, start_date=None, end_date=None
     ) -> Dict[str, List[LogEntry]]:

@@ -1,5 +1,3 @@
-from icecream import ic
-
 import json
 import csv
 import sqlite3
@@ -158,8 +156,10 @@ class SQLiteHandler:
     def persist_log_sql(self, entry: LogEntry):
         with self.get_conn() as conn:
             cursor = conn.cursor()
-            sql_query = f"INSERT INTO {self.table_name} (timestamp, level, message) VALUES ('{entry.date.isoformat()}', '{entry.level}', '{entry.message}')"
-            cursor.execute(sql_query)
+            sql_query = f"INSERT INTO {self.table_name} (timestamp, level, message) VALUES (?, ?, ?)"
+            cursor.execute(
+                sql_query, (entry.date.isoformat(), entry.level, entry.message)
+            )
             conn.commit()
 
     def retrieve_all_logs_sql(self) -> List[LogEntry]:
