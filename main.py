@@ -16,9 +16,9 @@ def log_json(handler):
     #                                              end_date=datetime.datetime(2025, 7, 1, hour=16, minute=41)
     #                                              )
     # ic("filtrowanie json", find_by_text)
-    find_by_text = reader.find_by_text('First message',
-                                       start_date=datetime.datetime(2025, 7, 1, hour=16, minute=30)
-                                       )
+    find_by_text = reader.find_by_text(
+        "First message", start_date=datetime.datetime(2025, 7, 1, hour=16, minute=30)
+    )
     ic("filtrowanie json", find_by_text)
 
 

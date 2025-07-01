@@ -48,9 +48,11 @@ class ProfileLogger:
 
     def write_to_handler(self, handler: Any, entry: LogEntry) -> None:
         persist_methods = [
-                            'persist_log_sql', 'persist_log_json',
-                            'persist_log_csv',  'persist_log_file'
-                            ]
+            "persist_log_sql",
+            "persist_log_json",
+            "persist_log_csv",
+            "persist_log_file",
+        ]
         last_exception = None
         for method_name in persist_methods:
             if hasattr(handler, method_name):
@@ -62,7 +64,9 @@ class ProfileLogger:
                     last_exception = e
                     continue
 
-        error_msg = f"ERROR: All handlers failed. Final error on {type(handler).__name__}"
+        error_msg = (
+            f"ERROR: All handlers failed. Final error on {type(handler).__name__}"
+        )
 
         if last_exception:
             error_msg += f". Last error {last_exception}"
@@ -93,11 +97,13 @@ class ProfileLoggerReader:
     def __init__(self, handler: Any):
         self.handler = handler
 
-    #TODO dystrubucja na włąściwy log/ czy logi mają być zapisywane w wszyskich formatach zawsze i odczytywane w wszystkich formatach
+    # TODO dystrubucja na włąściwy log/ czy logi mają być zapisywane w wszyskich formatach zawsze i odczytywane w wszystkich formatach
     def get_all_logs_from_handler(self) -> List[LogEntry]:
         retrieval_methods = [
-            'retrieve_all_logs_sql', 'retrieve_all_logs_json',
-            'retrieve_all_logs_csv', 'retrieve_all_logs_file'
+            "retrieve_all_logs_sql",
+            "retrieve_all_logs_json",
+            "retrieve_all_logs_csv",
+            "retrieve_all_logs_file",
         ]
 
         for method_name in retrieval_methods:
@@ -108,10 +114,12 @@ class ProfileLoggerReader:
                 except Exception as e:
                     print(f"{method_name}: {e}")
                     continue
-        print(f"ERROR: Handler {type(self.handler).__name__} has no recognized retrieval method.")
+        print(
+            f"ERROR: Handler {type(self.handler).__name__} has no recognized retrieval method."
+        )
         return []
 
-    #TODO dopytać poprawa filtrowania aby dopuszaczała tylko start lub end date
+    # TODO dopytać poprawa filtrowania aby dopuszaczała tylko start lub end date
     @staticmethod
     def filter_by_date(
         logs: List[LogEntry],
