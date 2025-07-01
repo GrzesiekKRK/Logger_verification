@@ -110,7 +110,6 @@ class FileHandler:
         ) as file:
             file.write(log_line)
 
-    # TODO CONTEXT MANAGER
     def retrieve_all_logs_file(self) -> List[LogEntry]:
         log_entries_list = []
         try:

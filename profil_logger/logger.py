@@ -200,24 +200,50 @@ class ProfileLoggerReader:
         self, start_date=None, end_date=None
     ) -> Dict[str, List[LogEntry]]:
         all_logs = self.get_all_logs_from_handler()
-        logs_to_group = self.filter_by_date(all_logs, start_date, end_date)
+        grouped_logs_map = {
+            "DEBUG": [],
+            "INFO": [],
+            "WARNING": [],
+            "ERROR": [],
+            "CRITICAL": [],
+        }
+        if start_date or end_date:
+            filter_by_date = self.filter_by_date(all_logs, start_date, end_date)
+            for log_entry in filter_by_date:
+                grouped_logs_map[log_entry.level].append(log_entry)
+            return grouped_logs_map
 
-        unique_levels = []
-        for log_entry in logs_to_group:
-            if log_entry.level not in unique_levels:
-                unique_levels.append(log_entry.level)
-
-        grouped_logs_map = {}
-        for level_key in unique_levels:
-            current_level_logs = []
-            for log_entry in logs_to_group:
-                if log_entry.level == level_key:
-                    current_level_logs.append(log_entry)
-
-            if current_level_logs:
-                grouped_logs_map[level_key] = current_level_logs
+        elif not start_date and not end_date:
+            for log_entry in all_logs:
+                grouped_logs_map[log_entry.level].append(log_entry)
+            return grouped_logs_map
 
         return grouped_logs_map
+
+    # def group_by_level(
+    #     self, start_date=None, end_date=None
+    # ) -> Dict[str, List[LogEntry]]:
+    #     all_logs = self.get_all_logs_from_handler()
+    #     unique_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+    #     grouped_logs_map = {"DEBUG": [], "INFO": [], "WARNING": [], "ERROR": [], "CRITICAL": []}
+    #     if start_date or end_date:
+    #         filter_by_date = self.filter_by_date(all_logs, start_date, end_date)
+    #         for level_key in unique_levels:
+    #             for log_entry in filter_by_date:
+    #                 if level_key == log_entry.level:
+    #                     grouped_logs_map[level_key].append(log_entry)
+    #
+    #         return grouped_logs_map
+    #
+    #     elif not start_date and not end_date:
+    #
+    #         for level_key in unique_levels:
+    #             for log_entry in all_logs:
+    #                 if level_key == log_entry.level:
+    #                     grouped_logs_map[level_key].append(log_entry)
+    #         return grouped_logs_map
+    #
+    #     return grouped_logs_map
 
     def group_by_month(
         self, start_date=None, end_date=None
