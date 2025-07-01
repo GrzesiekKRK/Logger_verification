@@ -1,241 +1,31 @@
 [
     {
-        "date": "2025-06-25T18:32:15.311170",
+        "date": "2025-07-01T16:40:39.972805",
         "level": "INFO",
         "message": "First message"
     },
     {
-        "date": "2025-06-25T18:32:15.397152",
+        "date": "2025-07-01T16:40:40.057169",
         "level": "WARNING",
         "message": "Second message"
     },
     {
-        "date": "2025-06-25T18:32:15.503106",
+        "date": "2025-07-01T16:40:40.142509",
         "level": "ERROR",
         "message": "Third message"
     },
     {
-        "date": "2025-06-25T18:56:30.535010",
+        "date": "2025-07-01T16:40:59.657182",
         "level": "INFO",
         "message": "First message"
     },
     {
-        "date": "2025-06-25T18:56:30.680678",
+        "date": "2025-07-01T16:40:59.794445",
         "level": "WARNING",
         "message": "Second message"
     },
     {
-        "date": "2025-06-25T18:56:30.821693",
-        "level": "ERROR",
-        "message": "Third message"
-    },
-    {
-        "date": "2025-06-25T18:56:32.603865",
-        "level": "INFO",
-        "message": "First message"
-    },
-    {
-        "date": "2025-06-25T18:56:32.705644",
-        "level": "WARNING",
-        "message": "Second message"
-    },
-    {
-        "date": "2025-06-25T18:56:32.800779",
-        "level": "ERROR",
-        "message": "Third message"
-    },
-    {
-        "date": "2025-06-25T18:56:38.878703",
-        "level": "INFO",
-        "message": "First message"
-    },
-    {
-        "date": "2025-06-25T18:56:38.966397",
-        "level": "WARNING",
-        "message": "Second message"
-    },
-    {
-        "date": "2025-06-25T18:56:39.051408",
-        "level": "ERROR",
-        "message": "Third message"
-    },
-    {
-        "date": "2025-06-25T18:56:40.534135",
-        "level": "INFO",
-        "message": "First message"
-    },
-    {
-        "date": "2025-06-25T18:56:40.662063",
-        "level": "WARNING",
-        "message": "Second message"
-    },
-    {
-        "date": "2025-06-25T18:56:40.779571",
-        "level": "ERROR",
-        "message": "Third message"
-    },
-    {
-        "date": "2025-06-25T19:00:19.174224",
-        "level": "INFO",
-        "message": "First message"
-    },
-    {
-        "date": "2025-06-25T19:00:19.251609",
-        "level": "WARNING",
-        "message": "Second message"
-    },
-    {
-        "date": "2025-06-25T19:00:19.361740",
-        "level": "ERROR",
-        "message": "Third message"
-    },
-    {
-        "date": "2025-06-25T19:00:32.862957",
-        "level": "INFO",
-        "message": "First message"
-    },
-    {
-        "date": "2025-06-25T19:00:32.946909",
-        "level": "WARNING",
-        "message": "Second message"
-    },
-    {
-        "date": "2025-06-25T19:00:33.030810",
-        "level": "ERROR",
-        "message": "Third message"
-    },
-    {
-        "date": "2025-06-25T19:00:38.269985",
-        "level": "INFO",
-        "message": "First message"
-    },
-    {
-        "date": "2025-06-25T19:00:38.345370",
-        "level": "WARNING",
-        "message": "Second message"
-    },
-    {
-        "date": "2025-06-25T19:00:38.475360",
-        "level": "ERROR",
-        "message": "Third message"
-    },
-    {
-        "date": "2025-06-25T19:21:04.592888",
-        "level": "INFO",
-        "message": "First message"
-    },
-    {
-        "date": "2025-06-25T19:21:05.125320",
-        "level": "WARNING",
-        "message": "Second message"
-    },
-    {
-        "date": "2025-06-25T19:21:05.210561",
-        "level": "ERROR",
-        "message": "Third message"
-    },
-    {
-        "date": "2025-06-25T19:21:16.828256",
-        "level": "INFO",
-        "message": "First message"
-    },
-    {
-        "date": "2025-06-25T19:21:16.996266",
-        "level": "WARNING",
-        "message": "Second message"
-    },
-    {
-        "date": "2025-06-25T19:21:17.092585",
-        "level": "ERROR",
-        "message": "Third message"
-    },
-    {
-        "date": "2025-06-25T19:21:58.729169",
-        "level": "INFO",
-        "message": "First message"
-    },
-    {
-        "date": "2025-06-25T19:21:58.906403",
-        "level": "WARNING",
-        "message": "Second message"
-    },
-    {
-        "date": "2025-06-25T19:21:59.002988",
-        "level": "ERROR",
-        "message": "Third message"
-    },
-    {
-        "date": "2025-06-25T19:29:08.993960",
-        "level": "INFO",
-        "message": "First message"
-    },
-    {
-        "date": "2025-06-25T19:29:09.251687",
-        "level": "WARNING",
-        "message": "Second message"
-    },
-    {
-        "date": "2025-06-25T19:29:09.348284",
-        "level": "ERROR",
-        "message": "Third message"
-    },
-    {
-        "date": "2025-06-25T19:52:50.247928",
-        "level": "INFO",
-        "message": "First message"
-    },
-    {
-        "date": "2025-06-25T19:52:50.405984",
-        "level": "WARNING",
-        "message": "Second message"
-    },
-    {
-        "date": "2025-06-25T19:52:50.546473",
-        "level": "ERROR",
-        "message": "Third message"
-    },
-    {
-        "date": "2025-06-25T19:54:14.804943",
-        "level": "INFO",
-        "message": "First message"
-    },
-    {
-        "date": "2025-06-25T19:54:14.967899",
-        "level": "WARNING",
-        "message": "Second message"
-    },
-    {
-        "date": "2025-06-25T19:54:15.053066",
-        "level": "ERROR",
-        "message": "Third message"
-    },
-    {
-        "date": "2025-06-25T19:54:23.323165",
-        "level": "INFO",
-        "message": "First message"
-    },
-    {
-        "date": "2025-06-25T19:54:23.517730",
-        "level": "WARNING",
-        "message": "Second message"
-    },
-    {
-        "date": "2025-06-25T19:54:23.602706",
-        "level": "ERROR",
-        "message": "Third message"
-    },
-    {
-        "date": "2025-06-25T19:58:15.212962",
-        "level": "INFO",
-        "message": "First message"
-    },
-    {
-        "date": "2025-06-25T19:58:15.378768",
-        "level": "WARNING",
-        "message": "Second message"
-    },
-    {
-        "date": "2025-06-25T19:58:15.474090",
+        "date": "2025-07-01T16:40:59.924460",
         "level": "ERROR",
         "message": "Third message"
     }

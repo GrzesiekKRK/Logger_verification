@@ -13,8 +13,6 @@ def log_json(handler):
     ic(f"Found {len(logs)} json logs:")
 
 
-
-
 def log_csv(handler):
     reader_csv = ProfileLoggerReader(handler)
     logs_csv = reader_csv.get_all_logs_from_handler()
@@ -47,9 +45,9 @@ def start():
     # logger.info("First message")
     # logger.warning("Second message")
     # logger.error("Third message")
-    # log_json(handler_json)
-    # log_csv(handler_csv)
-    # log_sql(handler_sql)
+    log_json(handler_json)
+    log_csv(handler_csv)
+    log_sql(handler_sql)
     log_file_handler(handler_file)
 
 

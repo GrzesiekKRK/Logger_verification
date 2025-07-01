@@ -139,7 +139,8 @@ class ProfileLoggerReader:
             pattern = re.compile(regex)
             matching_logs = [log for log in all_logs if pattern.search(log.message)]
             return self.filter_by_date(matching_logs, start_date, end_date)
-        except re.error:
+        except re.error as e:
+            print(f"No logs with '{regex}' ")
             return []
 
     def group_by_level(

@@ -9,8 +9,6 @@ from typing import List
 from .logger import LogEntry
 
 
-
-
 class JsonHandler:
     def __init__(self, filepath: str):
         self.filepath = filepath
@@ -44,7 +42,7 @@ class JsonHandler:
             ) as file:
                 data_dicts_list = json.load(file)
                 for entry_dict_item in data_dicts_list:
-                    log_entries_list.append(LogEntry.creat_log_entry(entry_dict_item))
+                    log_entries_list.append(LogEntry.create_log_entry(entry_dict_item))
         except (FileNotFoundError, json.JSONDecodeError):
             return []
         return log_entries_list
@@ -88,7 +86,7 @@ class CSVHandler:
             ) as file:
                 reader = csv.DictReader(file)
                 for row_as_dict in reader:
-                    log_entries_list.append(LogEntry.creat_log_entry(row_as_dict))
+                    log_entries_list.append(LogEntry.create_log_entry(row_as_dict))
         except FileNotFoundError:
             return []
         return log_entries_list
