@@ -111,7 +111,6 @@ class ProfileLoggerReader:
         print(f"ERROR: Handler {type(self.handler).__name__} has no recognized retrieval method.")
         return []
 
-
     @staticmethod
     def filter_by_date(
         logs: List[LogEntry],
@@ -120,11 +119,11 @@ class ProfileLoggerReader:
     ) -> List[LogEntry]:
         if not start_date and not end_date:
             return logs
-        to_remove = [log for log in logs if (start_date and log.date < start_date) or (end_date and log.date >= end_date)
-        ]
-        for item in to_remove:
-            logs.remove(item)
-        return logs
+        filtered_logs = []
+        for log in logs:
+            if start_date > log.date >= end_date:
+                filtered_logs.append(log)
+        return filtered_logs
 
     #TODO  plus szukanie tekstu
     def find_by_text(self, text: str, start_date=None, end_date=None) -> List[LogEntry]:
