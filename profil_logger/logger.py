@@ -3,7 +3,7 @@ import datetime
 import threading
 import re
 from typing import List, Optional, Dict, Any
-
+from collections import defaultdict
 
 LOG_LEVEL_VALUES = {"DEBUG": 0, "INFO": 1, "WARNING": 2, "ERROR": 3, "CRITICAL": 4}
 DEFAULT_LOG_LEVEL = "DEBUG"
@@ -119,43 +119,19 @@ class ProfileLoggerReader:
         )
         return []
 
-    # TODO dopytać poprawa filtrowania aby dopuszaczała tylko start lub end date
     @staticmethod
     def filter_by_date(
-        logs: List[LogEntry],
-        start_date: Optional[datetime.datetime] = None,
-        end_date: Optional[datetime.datetime] = None,
+            logs: List[LogEntry],
+            start_date: Optional[datetime.datetime] = None,
+            end_date: Optional[datetime.datetime] = None,
     ) -> List[LogEntry]:
         if not start_date and not end_date:
             return logs
         filtered_logs = []
         for log in logs:
-            if start_date and end_date:
-                if start_date < log.date <= end_date:
-                    filtered_logs.append(log)
-            elif start_date and not end_date:
-                if start_date < log.date:
-                    filtered_logs.append(log)
-            else:
-                if log.date <= end_date:
-                    filtered_logs.append(log)
-
+            if start_date < log.date <= end_date:
+                filtered_logs.append(log)
         return filtered_logs
-
-    # TODO stara wersja
-    # @staticmethod
-    # def filter_by_date(
-    #         logs: List[LogEntry],
-    #         start_date: Optional[datetime.datetime] = None,
-    #         end_date: Optional[datetime.datetime] = None,
-    # ) -> List[LogEntry]:
-    #     if not start_date and not end_date:
-    #         return logs
-    #     filtered_logs = []
-    #     for log in logs:
-    #         if start_date < log.date <= end_date:
-    #             filtered_logs.append(log)
-    #     return filtered_logs
 
     def find_by_text(self, text: str, start_date=None, end_date=None) -> List[LogEntry]:
         all_logs = self.get_all_logs_from_handler()
@@ -163,7 +139,6 @@ class ProfileLoggerReader:
         result_logs = [log for log in filter_by_time if text in log.message]
         return result_logs
 
-    # TODO regex nie znajduje First pisane first/ dałem lower na oba str
     def find_by_regex(
         self, regex: str, start_date=None, end_date=None
     ) -> List[LogEntry]:
@@ -184,45 +159,22 @@ class ProfileLoggerReader:
         self, start_date=None, end_date=None
     ) -> Dict[str, List[LogEntry]]:
         all_logs = self.get_all_logs_from_handler()
-        levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
-        grouped_logs_map = {level: [] for level in levels}
-        filter_by_date = self.filter_by_date(all_logs, start_date, end_date)
-        for log_entry in filter_by_date:
-            grouped_logs_map[log_entry.level].append(log_entry)
-        return grouped_logs_map
+        filter_logs = self.filter_by_date(all_logs, start_date, end_date)
 
-    # def group_by_level(
-    #     self, start_date=None, end_date=None
-    # ) -> Dict[str, List[LogEntry]]:
-    #     all_logs = self.get_all_logs_from_handler()
-    #     unique_levels = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
-    #     grouped_logs_map = {"DEBUG": [], "INFO": [], "WARNING": [], "ERROR": [], "CRITICAL": []}
-    #     if start_date or end_date:
-    #         filter_by_date = self.filter_by_date(all_logs, start_date, end_date)
-    #         for level_key in unique_levels:
-    #             for log_entry in filter_by_date:
-    #                 if level_key == log_entry.level:
-    #                     grouped_logs_map[level_key].append(log_entry)
-    #
-    #         return grouped_logs_map
-    #
-    #     elif not start_date and not end_date:
-    #
-    #         for level_key in unique_levels:
-    #             for log_entry in all_logs:
-    #                 if level_key == log_entry.level:
-    #                     grouped_logs_map[level_key].append(log_entry)
-    #         return grouped_logs_map
-    #
-    #     return grouped_logs_map
+        grouped = defaultdict(list)
+        for log_entry in filter_logs:
+            level = log_entry.level
+            grouped[level].append(log_entry)
+
+        return grouped
 
     def group_by_month(
         self, start_date=None, end_date=None
     ) -> Dict[str, List[LogEntry]]:
         all_logs = self.get_all_logs_from_handler()
         logs_to_group = self.filter_by_date(all_logs, start_date, end_date)
-        grouped_by_month = {f"{i:02}": [] for i in range(1, 13)}
+        grouped_by_month = defaultdict(list)
         for log_entry in logs_to_group:
-            month_key = log_entry.date.strftime("%m")
-            grouped_by_month[month_key].append(log_entry)
+            key = log_entry.date.strftime("%Y-%m")
+            grouped_by_month[key].append(log_entry)
         return grouped_by_month
