@@ -111,6 +111,7 @@ class ProfileLoggerReader:
         print(f"ERROR: Handler {type(self.handler).__name__} has no recognized retrieval method.")
         return []
 
+    #TODO dopytać poprawa filtrowania aby dopuszaczała tylko start lub end date
     @staticmethod
     def filter_by_date(
         logs: List[LogEntry],
@@ -121,14 +122,41 @@ class ProfileLoggerReader:
             return logs
         filtered_logs = []
         for log in logs:
-            if start_date < log.date <= end_date:
-                filtered_logs.append(log)
+            if start_date and end_date:
+                if start_date < log.date <= end_date:
+                    filtered_logs.append(log)
+            elif start_date and not end_date:
+                if start_date < log.date:
+                    filtered_logs.append(log)
+            else:
+                if log.date <= end_date:
+                    filtered_logs.append(log)
+
         return filtered_logs
+
+    # @staticmethod
+    # def filter_by_date(
+    #         logs: List[LogEntry],
+    #         start_date: Optional[datetime.datetime] = None,
+    #         end_date: Optional[datetime.datetime] = None,
+    # ) -> List[LogEntry]:
+    #     if not start_date and not end_date:
+    #         return logs
+    #     filtered_logs = []
+    #     for log in logs:
+    #         if start_date < log.date <= end_date:
+    #             filtered_logs.append(log)
+    #     return filtered_logs
 
     def find_by_text(self, text: str, start_date=None, end_date=None) -> List[LogEntry]:
         all_logs = self.get_all_logs_from_handler()
-        result_logs = [log for log in all_logs if text in log.message]
-        return self.filter_by_date(result_logs, start_date, end_date)
+        result_logs = []
+        if start_date or end_date:
+            filter_by_time = self.filter_by_date(all_logs, start_date, end_date)
+            result_logs = [log for log in filter_by_time if text in log.message]
+        else:
+            result_logs = [log for log in all_logs if text in log.message]
+        return result_logs
 
     def find_by_regex(
         self, regex: str, start_date=None, end_date=None
