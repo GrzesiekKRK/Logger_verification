@@ -102,7 +102,7 @@ class TestProfileLogger:
         reader = ProfileLoggerReader(self.json_handler)
         logs = reader.get_all_logs_from_handler()
 
-        assert len(logs) == 10
+        assert len(logs) == 10 #5 setup add 5 added in this test
         assert logs[0].level == "DEBUG"
         assert logs[1].level == "INFO"
         assert logs[2].level == "WARNING"
@@ -197,11 +197,6 @@ class TestProfileLoggerReader:
 class TestHandlers:
     def setup_method(self):
         self.temp_dir = tempfile.mkdtemp()
-
-    def teardown_method(self):
-        import shutil
-
-        shutil.rmtree(self.temp_dir, ignore_errors=True)
 
     def test_json_handler_roundtrip(self):
         json_file = os.path.join(self.temp_dir, "test.json")
